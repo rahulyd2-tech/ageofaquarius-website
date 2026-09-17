@@ -340,7 +340,7 @@ header{animation:hdrin .8s cubic-bezier(.2,.7,.2,1) both}
 .parallax{will-change:transform}
 section:not(.hero2)::after{content:"";position:absolute;top:-1px;left:0;height:1px;width:30%;background:linear-gradient(90deg,transparent,rgba(227,194,122,.6),transparent);animation:edge 7s linear infinite;pointer-events:none}
 @keyframes edge{from{left:-30%}to{left:100%}}
-.contact .in>.btn{margin-top:28px}
+
 .contact .btn{animation:ctaring 2.8s ease-out infinite}
 @keyframes ctaring{0%{box-shadow:0 0 0 0 rgba(95,195,182,.45)}70%,100%{box-shadow:0 0 0 14px rgba(95,195,182,0)}}
 .totop{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));width:48px;height:48px;border-radius:50%;border:0;background:rgba(11,30,51,.85);backdrop-filter:blur(8px);color:#F3F7F8;cursor:pointer;z-index:25;display:grid;place-items:center;transform:translateY(90px);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
@@ -411,6 +411,12 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
 .phase .with.wl img{height:18px}
 @media (max-width:1000px) and (min-width:761px){.ticks{font-size:12.5px}.phase .body{padding:14px 14px 16px}}
 .built img{height:22px;width:auto}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.ctas .btn{gap:9px}
+.ctas .ic{width:18px;height:18px;flex:none}
+.btn.wa{background:#25D366;color:#06301A}
+.btn.wa:hover{box-shadow:0 10px 30px -10px rgba(37,211,102,.6)}
+.contact .ctas .btn{animation:none}
 /* ===== interactivity ===== */
 .arm,.truck,.hover,.bob,.pop,.sweep,.ripple{transform-box:view-box}
 .arm{transform-origin:246px 104px;animation:dig 4s ease-in-out infinite}
@@ -1018,9 +1024,10 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
             <div class="addr"><svg class="pinic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a6.5 6.5 0 0 0-6.5 6.5c0 4.8 6.5 12.5 6.5 12.5s6.5-7.7 6.5-12.5A6.5 6.5 0 0 0 12 2.5z" fill="none" stroke="#5FC3B6" stroke-width="1.6"/><circle cx="12" cy="9" r="2.2" fill="#E3C27A"/></svg><div><span class="al">Office</span><b>Saswad, Pune</b><p>Shop #17, Udyam BizBay, Saswad Village Ekhatpur, opposite New Administrative, Pune, Maharashtra 412301</p><a class="maplink" href="https://www.google.com/maps/search/?api=1&amp;query=Shop%20%2317%2C%20Udyam%20BizBay%2C%20Saswad%20Village%20Ekhatpur%2C%20opposite%20New%20Administrative%2C%20Pune%2C%20Maharashtra%20412301" target="_blank" rel="noopener">View on map ↗</a></div></div>
             <div class="addr"><svg class="pinic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5a6.5 6.5 0 0 0-6.5 6.5c0 4.8 6.5 12.5 6.5 12.5s6.5-7.7 6.5-12.5A6.5 6.5 0 0 0 12 2.5z" fill="none" stroke="#5FC3B6" stroke-width="1.6"/><circle cx="12" cy="9" r="2.2" fill="#E3C27A"/></svg><div><span class="al">Registered office</span><b>Bavdhan, Pune</b><p>102, Aranya Apts, Amchi Col., Bavdhan, Pune, Haveli, Maharashtra 411021, India</p><a class="maplink" href="https://www.google.com/maps/search/?api=1&amp;query=102%2C%20Aranya%20Apts%2C%20Amchi%20Col.%2C%20Bavdhan%2C%20Pune%2C%20Haveli%2C%20Maharashtra%20411021%2C%20India" target="_blank" rel="noopener">View on map ↗</a></div></div>
             <div class="addr"><svg class="pinic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="#5FC3B6" stroke-width="1.6"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="#E3C27A" stroke-width="1.6"/></svg><div><span class="al">Email</span><p><a href="mailto:hello@ageofaquarius.in" style="color:inherit">hello@ageofaquarius.in</a></p></div></div>
+            <div class="addr"><svg class="pinic" viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5" fill="none" stroke="#5FC3B6" stroke-width="1.6"/><path d="M10.5 18.5h3" stroke="#E3C27A" stroke-width="1.6"/></svg><div><span class="al">Mobile / WhatsApp</span><p><a href="tel:+918956552480" style="color:inherit">+91 89565 52480</a></p></div></div>
           </div>
           
-          <a class="btn" href="mailto:hello@ageofaquarius.in">Start a conversation →</a>
+          <div class="ctas"><a class="btn" href="mailto:hello@ageofaquarius.in?subject=Enquiry%20-%20Age%20of%20Aquarius%20Group"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5.5" width="18" height="13" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 7l8.5 6 8.5-6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Send Email Enquiry</a><a class="btn wa" href="https://wa.me/918956552480?text=Hello%20Age%20of%20Aquarius%20Group%2C%20I%27d%20like%20to%20enquire%20about%20" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2A9.8 9.8 0 0 0 3.6 17l-1.3 4.8 4.9-1.3A9.8 9.8 0 1 0 12 2.2zm0 1.8a8 8 0 1 1-4 14.9l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 0 1 12 4zm-3.3 3.9c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 4.9 4.3 2.4 1 2.9.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.2-1.4-.1-.1-.3-.2-.6-.4l-1.9-.9c-.3-.1-.5-.1-.7.1l-.9 1.1c-.2.2-.3.2-.6.1-.3-.2-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.4.1-.6l.5-.5.3-.5c.1-.2 0-.4 0-.5l-.9-2.1c-.2-.5-.4-.5-.6-.5h-.5z" fill="currentColor"/></svg>Connect on WhatsApp</a></div>
         </div>
         <div class="pic">
           <canvas id="terrain2" aria-hidden="true"></canvas><div class="fade"></div>
