@@ -391,6 +391,8 @@ section.in-products{border-top:1px dashed rgba(159,201,196,.14)}
 .sec-head h2.prod-title{font-size:clamp(30px,3.6vw,46px);line-height:1.1;font-weight:700}
 .sec-head>div:last-child,.sec-head>p{padding-top:26px}
 @media (max-width:760px){.sec-head>div:last-child,.sec-head>p{padding-top:0}}
+html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
+@media (max-width:760px){html{scroll-padding-top:calc(69px + env(safe-area-inset-top,0px))}}
 /* ===== interactivity ===== */
 .arm,.truck,.hover,.bob,.pop,.sweep,.ripple{transform-box:view-box}
 .arm{transform-origin:246px 104px;animation:dig 4s ease-in-out infinite}
