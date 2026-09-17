@@ -138,7 +138,7 @@ section{padding-block:clamp(56px,8vw,104px)}
 
 /* digital twin */
 .twin{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-@media (max-width:900px){.twin{grid-template-columns:1fr}}
+@media (max-width:760px){.twin{grid-template-columns:1fr}}
 .phase{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
 .phase .pic{border-bottom:1px solid var(--line)}
 .phase .body{padding:22px 24px 26px;display:flex;flex-direction:column;gap:10px}
@@ -377,6 +377,7 @@ section.in-products{border-top:1px dashed rgba(159,201,196,.14)}
 .links{gap:clamp(22px,3.2vw,44px);font:500 14.5px var(--display);letter-spacing:.015em;padding:6px 8px}
 .links a{padding-block:8px}
 @media (max-width:760px){.nav{grid-template-columns:1fr auto;height:68px}}
+@media (max-width:960px){.links{display:none}.nav{grid-template-columns:1fr auto}}
 .addrs{display:flex;flex-direction:column;margin-top:28px;border-top:1px solid rgba(159,201,196,.14)}
 .addr{display:grid;grid-template-columns:20px 1fr;column-gap:14px;padding:14px 0;border-bottom:1px solid rgba(159,201,196,.14)}
 .pinic{width:18px;height:18px;margin-top:2px}
@@ -393,6 +394,22 @@ section.in-products{border-top:1px dashed rgba(159,201,196,.14)}
 @media (max-width:760px){.sec-head>div:last-child,.sec-head>p{padding-top:0}}
 html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
 @media (max-width:760px){html{scroll-padding-top:calc(69px + env(safe-area-inset-top,0px))}}
+.brand b,.links a{white-space:nowrap}
+@media (max-width:1100px){.links{gap:18px;font-size:13.5px}.nav{column-gap:14px}}
+@media (max-width:900px){.links{gap:14px}}
+/* compact Site Explorer cards */
+#platform{padding-block:clamp(40px,4vw,56px)}
+#platform .sec-head{margin-bottom:28px}
+.twin{gap:16px;align-items:stretch}
+.phase .pic svg{aspect-ratio:360/188;width:100%;height:auto;display:block}
+.phase .body{padding:16px 18px 18px;gap:7px}
+.phase h3{font-size:17px}
+.phase .ph{font-size:10px;padding:5px 9px}
+.ticks{gap:6px;font-size:13.5px;line-height:1.42;margin-top:2px}
+.ticks li{padding-left:19px}
+.ticks li::before{width:10px;height:6px;top:.45em;left:2px}
+.phase .with.wl img{height:18px}
+@media (max-width:1000px) and (min-width:761px){.ticks{font-size:12.5px}.phase .body{padding:14px 14px 16px}}
 /* ===== interactivity ===== */
 .arm,.truck,.hover,.bob,.pop,.sweep,.ripple{transform-box:view-box}
 .arm{transform-origin:246px 104px;animation:dig 4s ease-in-out infinite}
@@ -460,7 +477,7 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
       <span><b>AGE OF AQUARIUS</b><small>GROUP</small></span>
     </a>
     <nav class="links" aria-label="Main">
-      <a href="#services">Services</a><a href="#products">Platform</a><a href="#partner">Partners</a><a href="#project">Projects</a>
+      <a href="#approach">How we work</a><a href="#services">Services</a><a href="#products">Platform</a><a href="#partner">Partners</a><a href="#project">Projects</a>
     </nav>
     <a class="btn" href="#contact">Contact</a>
   </div>
@@ -565,6 +582,29 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
             <ul><li>Roads</li><li>Earthmoving</li><li>Farm ponds</li><li>Solar lighting &amp; surveillance</li></ul>
           </div>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="approach" class="band gridbg">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">How we work</span><h2>Read the land first. <span class="g">Build second.</span></h2></div>
+        <p>Every decision starts with data from the ground itself.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="n">01</span>
+          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 32c6-8 12-8 16-4s10 4 16-4"/><path d="M6 24c6-8 12-8 16-4s10 4 16-4" opacity=".55"/><circle style="stroke:var(--gold)" cx="22" cy="12" r="3.5"/><path style="stroke:var(--gold)" d="M22 15.5V22"/></svg>
+          <h3>Survey</h3><p>VidYash Aerospace drone flights and total-station surveys map every slope and boundary.</p></div>
+        <div class="step"><span class="n">02</span>
+          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="7" y="7" width="30" height="30" rx="2"/><path d="M7 20h14V7M21 20v17M21 28h16"/><circle style="stroke:var(--gold)" cx="30" cy="14" r="3"/></svg>
+          <h3>Plan</h3><p>Layouts follow the natural contours to balance cut and fill.</p></div>
+        <div class="step"><span class="n">03</span>
+          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 37h32"/><rect x="10" y="18" width="10" height="19"/><rect x="24" y="10" width="10" height="27"/><path style="stroke:var(--gold)" d="M29 4v6"/></svg>
+          <h3>Build</h3><p>Infrastructure goes in first, then the homes and spaces above it.</p></div>
+        <div class="step"><span class="n">04</span>
+          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M22 38V20"/><path d="M22 22c-8 0-12-5-12-12 8 0 12 5 12 12zM22 26c6 0 10-4 10-10-6 0-10 4-10 10z"/><path style="stroke:var(--gold)" d="M12 38h20"/></svg>
+          <h3>Steward</h3><p>We stay with the places we make — green, maintained, lasting.</p></div>
       </div>
     </div>
   </section>
@@ -686,28 +726,6 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
     </div>
   </section>
 
-  <section id="approach" class="band gridbg">
-    <div class="wrap">
-      <div class="sec-head">
-        <div><span class="eyebrow">How we work</span><h2>Read the land first. <span class="g">Build second.</span></h2></div>
-        <p>Every decision starts with data from the ground itself.</p>
-      </div>
-      <div class="steps">
-        <div class="step"><span class="n">01</span>
-          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 32c6-8 12-8 16-4s10 4 16-4"/><path d="M6 24c6-8 12-8 16-4s10 4 16-4" opacity=".55"/><circle style="stroke:var(--gold)" cx="22" cy="12" r="3.5"/><path style="stroke:var(--gold)" d="M22 15.5V22"/></svg>
-          <h3>Survey</h3><p>VidYash Aerospace drone flights and total-station surveys map every slope and boundary.</p></div>
-        <div class="step"><span class="n">02</span>
-          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="7" y="7" width="30" height="30" rx="2"/><path d="M7 20h14V7M21 20v17M21 28h16"/><circle style="stroke:var(--gold)" cx="30" cy="14" r="3"/></svg>
-          <h3>Plan</h3><p>Layouts follow the natural contours to balance cut and fill.</p></div>
-        <div class="step"><span class="n">03</span>
-          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M6 37h32"/><rect x="10" y="18" width="10" height="19"/><rect x="24" y="10" width="10" height="27"/><path style="stroke:var(--gold)" d="M29 4v6"/></svg>
-          <h3>Build</h3><p>Infrastructure goes in first, then the homes and spaces above it.</p></div>
-        <div class="step"><span class="n">04</span>
-          <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M22 38V20"/><path d="M22 22c-8 0-12-5-12-12 8 0 12 5 12 12zM22 26c6 0 10-4 10-10-6 0-10 4-10 10z"/><path style="stroke:var(--gold)" d="M12 38h20"/></svg>
-          <h3>Steward</h3><p>We stay with the places we make — green, maintained, lasting.</p></div>
-      </div>
-    </div>
-  </section>
 
   <section id="products" class="products-intro">
     <div class="wrap">
@@ -739,7 +757,7 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
       <div class="twin">
         <article class="phase">
           <div class="pic">
-            <svg viewBox="0 0 360 230" role="img" aria-label="3D terrain model with contour lines, boundary fence, trees and a camera viewpoint">
+            <svg viewBox="0 0 360 230" preserveAspectRatio="xMidYMid slice" role="img" aria-label="3D terrain model with contour lines, boundary fence, trees and a camera viewpoint">
               <rect style="fill:var(--sky)" width="360" height="230"/>
               <path style="fill:var(--hill1)" d="M0 150 C60 96 120 80 180 104 S300 120 360 92 V230 H0Z"/>
               <g style="stroke:var(--teal)" fill="none" stroke-width="1" opacity=".55">
@@ -772,7 +790,7 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
 
         <article class="phase">
           <div class="pic">
-            <svg viewBox="0 0 360 230" role="img" aria-label="Site under work with a drone flight path, geo-tagged pins, a trench and a road being laid">
+            <svg viewBox="0 0 360 230" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Site under work with a drone flight path, geo-tagged pins, a trench and a road being laid">
               <rect style="fill:var(--sky)" width="360" height="230"/>
               <path style="fill:var(--hill2)" d="M0 150 C60 96 120 80 180 104 S300 120 360 92 V230 H0Z" opacity=".7"/>
               <path style="fill:var(--hill3)" d="M0 196 C80 170 180 176 360 150 V230 H0Z"/>
@@ -787,8 +805,8 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
                 <g class="bob"><path style="fill:var(--teal)" d="M250 150 a9 9 0 1 1 14 0 l-7 10z" transform="translate(-9 -8)"/></g>
                 <g class="bob"><path style="fill:var(--teal)" d="M140 188 a9 9 0 1 1 14 0 l-7 10z" transform="translate(-9 -8)"/></g>
               </g>
-              <rect style="fill:var(--surface)" x="206" y="186" width="140" height="30" rx="8"/>
-              <circle style="fill:var(--leaf)" cx="220" cy="201" r="4"/><text style="fill:var(--ink)" x="230" y="205" font-family="IBM Plex Mono, monospace" font-size="10">Road · 6 m · live</text>
+              <rect style="fill:var(--surface)" x="206" y="170" width="140" height="30" rx="8"/>
+              <circle style="fill:var(--leaf)" cx="220" cy="185" r="4"/><text style="fill:var(--ink)" x="230" y="189" font-family="IBM Plex Mono, monospace" font-size="10">Road · 6 m · live</text>
             </svg>
           </div>
           <div class="body">
@@ -804,7 +822,7 @@ html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
 
         <article class="phase">
           <div class="pic">
-            <svg viewBox="0 0 360 230" role="img" aria-label="Finished site with road, pipeline, fence, homes and a verified check mark">
+            <svg viewBox="0 0 360 230" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Finished site with road, pipeline, fence, homes and a verified check mark">
               <rect style="fill:var(--sky)" width="360" height="230"/>
               <path style="fill:var(--hill2)" d="M0 150 C60 108 120 100 180 116 S300 124 360 104 V230 H0Z" opacity=".7"/>
               <path style="fill:var(--hill3)" d="M0 196 C80 170 180 176 360 150 V230 H0Z"/>
