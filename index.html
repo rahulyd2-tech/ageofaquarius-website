@@ -369,6 +369,13 @@ section:not(.hero2)::after{content:"";position:absolute;top:-1px;left:0;height:1
 .prod .arr{font:500 20px var(--display);color:var(--teal);transition:transform .3s}
 .prod:hover .arr{transform:translateX(5px)}
 section.in-products{border-top:1px dashed rgba(159,201,196,.14)}
+/* nav spacing */
+.nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;column-gap:clamp(16px,3vw,40px);height:76px}
+.nav .brand{justify-self:start}
+.nav .btn{justify-self:end;padding:11px 24px}
+.links{gap:clamp(22px,3.2vw,44px);font:500 14.5px var(--display);letter-spacing:.015em;padding:6px 8px}
+.links a{padding-block:8px}
+@media (max-width:760px){.nav{grid-template-columns:1fr auto;height:68px}}
 /* ===== interactivity ===== */
 .arm,.truck,.hover,.bob,.pop,.sweep,.ripple{transform-box:view-box}
 .arm{transform-origin:246px 104px;animation:dig 4s ease-in-out infinite}
@@ -436,7 +443,7 @@ section.in-products{border-top:1px dashed rgba(159,201,196,.14)}
       <span><b>AGE OF AQUARIUS</b><small>GROUP</small></span>
     </a>
     <nav class="links" aria-label="Main">
-      <a href="#services">Services</a><a href="#products">Digital products</a><a href="#partner">Partners</a><a href="#project">Projects</a>
+      <a href="#services">Services</a><a href="#products">Platform</a><a href="#partner">Partners</a><a href="#project">Projects</a>
     </nav>
     <a class="btn" href="#contact">Contact</a>
   </div>
