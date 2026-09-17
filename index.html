@@ -60,7 +60,7 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:co
 .hero2{position:relative;overflow:hidden;background:#0B1E33;color:#E8F0F2;isolation:isolate}
 #terrain{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
 .hero-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#0B1E33 0%,rgba(11,30,51,.92) 32%,rgba(11,30,51,.35) 62%,rgba(11,30,51,.1) 100%),linear-gradient(0deg,#0B1E33 0%,rgba(11,30,51,0) 30%)}
-.hero2-in{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,.6fr);align-items:end;gap:32px;padding-block:clamp(72px,9vw,120px) clamp(48px,6vw,80px);min-height:min(72vh,660px)}
+.hero2-in{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,.6fr);align-items:end;gap:32px;padding-block:clamp(56px,7vw,104px) clamp(48px,6vw,88px);min-height:0}
 .kicker{display:inline-flex;align-items:center;gap:10px;font:500 12px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:#9FC9C4}
 .kicker i{width:28px;height:1px;background:#E3A94B}
 .hero2 h1{font:700 clamp(40px,5.6vw,74px)/1.02 var(--display);letter-spacing:-.025em;color:#F3F7F8;margin:22px 0 22px}
@@ -260,7 +260,7 @@ header{background:rgba(11,30,51,.78);border-bottom:1px solid rgba(159,201,196,.1
 .eyebrow::before{content:"";width:28px;height:1px;background:var(--gold)}
 h2 .g,.grad{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
 section{position:relative;border-top:1px solid rgba(159,201,196,.10)}
-section.hero2{border-top:0}
+section.hero2{border-top:0;padding-block:0}
 .alt{background:var(--ground2)}
 .gridbg{background-image:linear-gradient(rgba(95,195,182,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(95,195,182,.05) 1px,transparent 1px);background-size:48px 48px}
 .band{background:var(--deep)}
@@ -448,7 +448,7 @@ section.in-products{border-top:1px dashed rgba(159,201,196,.14)}
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="wrap hero2-in">
       <div class="hero2-copy">
-        <span class="kicker"><i></i>Age of Aquarius Group · Pune, India</span>
+        <span class="kicker"><i></i>Age of Aquarius Group</span>
         <h1 id="hero-title">From raw land<br>to <span>living places.</span></h1>
         <p>Real estate development and infrastructure, planned on a digital twin and built by our own crews.</p>
         <div class="cta">
