@@ -454,7 +454,9 @@ body.menu-open{overflow:hidden}
 .builtrow .built{margin:0;height:28px;display:inline-flex;align-items:center;gap:10px;line-height:1}
 .builtrow .built img{height:22px;width:auto}
 .pcard .pair{gap:16px}
-.pcard .pair img.dm{width:auto;height:clamp(50px,4.6vw,66px);max-width:62%}
+.pcard .pair img.dm{width:clamp(180px,19vw,250px);height:auto;max-width:none;aspect-ratio:auto;object-fit:contain;flex:0 1 auto;min-width:0}
+.pcard .pair{flex-wrap:nowrap;justify-content:center}
+.pcard .pair img.aoa{flex:0 0 auto}
 .pcard .pair img.aoa{width:clamp(64px,6vw,84px)}
 .pcard .link{width:clamp(28px,3.5vw,48px)!important}
 .pbadge small{font:500 13px var(--mono);letter-spacing:.14em;color:#9FC9C4}
