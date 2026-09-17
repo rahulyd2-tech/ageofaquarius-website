@@ -392,8 +392,8 @@ section.in-products{border-top:1px dashed rgba(159,201,196,.14)}
 .sec-head h2.prod-title{font-size:clamp(30px,3.6vw,46px);line-height:1.1;font-weight:700}
 .sec-head>div:last-child,.sec-head>p{padding-top:26px}
 @media (max-width:760px){.sec-head>div:last-child,.sec-head>p{padding-top:0}}
-html{scroll-padding-top:calc(77px + env(safe-area-inset-top,0px))}
-@media (max-width:760px){html{scroll-padding-top:calc(69px + env(safe-area-inset-top,0px))}}
+section[id]{scroll-margin-top:calc(77px + 36px - clamp(56px,8vw,104px) + env(safe-area-inset-top,0px))}
+@media (max-width:760px){section[id]{scroll-margin-top:calc(69px + 24px - clamp(56px,8vw,104px) + env(safe-area-inset-top,0px))}}
 .brand b,.links a{white-space:nowrap}
 @media (max-width:1100px){.links{gap:18px;font-size:13.5px}.nav{column-gap:14px}}
 @media (max-width:900px){.links{gap:14px}}
