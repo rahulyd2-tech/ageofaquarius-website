@@ -491,6 +491,8 @@ body.menu-open{overflow:hidden}
 @media (min-width:861px){.partner{grid-template-columns:1fr 1.15fr}}
 @media (max-width:560px){.pcard .pair{flex-direction:column;gap:14px}.pcard .link{width:2px!important;height:30px!important;background:repeating-linear-gradient(180deg,var(--teal) 0 6px,transparent 6px 11px)!important}}
 @media (min-width:561px){.pcard .link{animation:dash 1.2s linear infinite!important}}
+#home{scroll-margin-top:0}
+.drawer.open .dlinks a:nth-child(7){transition-delay:.24s}
 /* ===== interactivity ===== */
 .arm,.truck,.hover,.bob,.pop,.sweep,.ripple{transform-box:view-box}
 .arm{transform-origin:246px 104px;animation:dig 4s ease-in-out infinite}
@@ -558,7 +560,7 @@ body.menu-open{overflow:hidden}
       <span><b>AGE OF AQUARIUS</b><small>GROUP</small></span>
     </a>
     <nav class="links" aria-label="Main">
-      <a href="#approach">How we work</a><a href="#services">Services</a><a href="#products">Platform</a><a href="#partner">Partners</a><a href="#project">Projects</a>
+      <a href="#home">Home</a><a href="#approach">How we work</a><a href="#services">Services</a><a href="#products">Platform</a><a href="#partner">Partners</a><a href="#project">Projects</a>
     </nav>
     <div class="nav-right"><a class="btn nav-cta" href="#contact">Contact</a><button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><span></span><span></span><span></span></button></div>
   </div>
@@ -567,12 +569,13 @@ body.menu-open{overflow:hidden}
 <aside class="drawer" id="drawer" aria-label="Menu" aria-hidden="true">
   <div class="drawer-top"><span class="eyebrow">Menu</span><button class="dclose" id="dclose" type="button" aria-label="Close menu">✕</button></div>
   <nav class="dlinks">
-    <a href="#approach"><i>01</i>How we work</a>
-    <a href="#services"><i>02</i>Services</a>
-    <a href="#products"><i>03</i>Platform</a>
-    <a href="#partner"><i>04</i>Partners</a>
-    <a href="#project"><i>05</i>Projects</a>
-    <a href="#contact"><i>06</i>Contact</a>
+    <a href="#home"><i>01</i>Home</a>
+    <a href="#approach"><i>02</i>How we work</a>
+    <a href="#services"><i>03</i>Services</a>
+    <a href="#products"><i>04</i>Platform</a>
+    <a href="#partner"><i>05</i>Partners</a>
+    <a href="#project"><i>06</i>Projects</a>
+    <a href="#contact"><i>07</i>Contact</a>
   </nav>
   <div class="dcta">
     <a class="btn" href="mailto:hello@ageofaquariusdevelopers.in?subject=Enquiry%20-%20Age%20of%20Aquarius%20Group">Send Email Enquiry</a>
@@ -582,7 +585,7 @@ body.menu-open{overflow:hidden}
 
 
 <main id="top">
-  <section class="hero2" aria-labelledby="hero-title">
+  <section class="hero2" id="home" aria-labelledby="hero-title">
     <canvas id="terrain" aria-hidden="true"></canvas>
     <div class="hero-shade" aria-hidden="true"></div>
     <div class="wrap hero2-in">
@@ -1290,7 +1293,7 @@ initTerrain(document.getElementById('terrain2'),{cx:.62,hor:.12});
   const top=document.createElement('button');top.className='totop';top.id='totop';top.setAttribute('aria-label','Back to top');
   top.innerHTML='<svg viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="22"/><circle class="bar" cx="24" cy="24" r="22"/></svg><span>↑</span>';
   document.body.appendChild(top);top.addEventListener('click',()=>scrollTo({top:0,behavior:reduce?'auto':'smooth'}));
-  document.querySelectorAll('a.brand').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();scrollTo({top:0,behavior:reduce?'auto':'smooth'});history.replaceState(null,'',location.pathname);}));
+  document.querySelectorAll('a.brand,a[href="#home"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();scrollTo({top:0,behavior:reduce?'auto':'smooth'});history.replaceState(null,'',location.pathname);const d=document.getElementById('drawer');if(d&&d.classList.contains('open'))document.getElementById('burger').click();}));
   const links=[...document.querySelectorAll('.links a')];
   const secs=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
   const pars=[...document.querySelectorAll('.co .pic svg,.phase .pic svg')];
