@@ -17,6 +17,7 @@
 var SHEET_LEADS = 'Leads';
 var SHEET_ACTIVITY = 'Activity';
 var SHEET_CONFIG = 'Config';
+var SHEET_BLOCKED = 'Blocked';
 
 var LEAD_COLUMNS = [
   'lead_id', 'created_at', 'lang', 'track', 'name', 'mobile', 'whatsapp_ok', 'email', 'company',
@@ -28,6 +29,8 @@ var LEAD_COLUMNS = [
 ];
 
 var ACTIVITY_COLUMNS = ['ts', 'lead_id', 'actor', 'type', 'summary', 'next_step'];
+
+var BLOCKED_COLUMNS = ['ts', 'reason', 'name', 'mobile', 'email', 'track', 'notes', 'client_id', 'page', 'referrer', 'device', 'fill_seconds'];
 
 var DEFAULT_CONFIG = [
   ['key', 'value', 'note'],
@@ -49,7 +52,13 @@ var DEFAULT_CONFIG = [
   ['w_contactable', '10', 'Score weight — valid Indian mobile'],
   ['band_hot_min', '70', 'Score at or above this is Hot'],
   ['band_warm_min', '40', 'Score at or above this is Warm'],
-  ['digest_hour', '9', 'Hour (IST) for the daily digest email']
+  ['digest_hour', '9', 'Hour (IST) for the daily digest email'],
+  ['spam_min_seconds', '5', 'Reject enquiries filled faster than this many seconds'],
+  ['spam_max_per_client_hour', '3', 'Max enquiries from one browser per hour'],
+  ['spam_max_per_hour', '40', 'Max enquiries site-wide per hour'],
+  ['spam_dupe_minutes', '20', 'Same mobile inside this window is treated as the same enquiry'],
+  ['spam_max_links', '1', 'Links allowed inside the message'],
+  ['spam_blocklist', 'seo service,backlink,rank your website,guest post,crypto,bitcoin,casino,viagra,escort,forex,porn,web design service,increase traffic', 'Comma-separated words that block an enquiry']
 ];
 
 /* ------------------------------------------------------------------ setup */
@@ -93,6 +102,12 @@ function ensureConfig(ss) {
     sh.getRange(1, 1, DEFAULT_CONFIG.length, 3).setValues(DEFAULT_CONFIG);
     sh.setFrozenRows(1);
     sh.getRange(1, 1, 1, 3).setFontWeight('bold');
+  } else {
+    // Top up any keys added in a later version of this script.
+    var have = {};
+    sh.getDataRange().getValues().forEach(function (r) { if (r[0]) have[String(r[0])] = true; });
+    var add = DEFAULT_CONFIG.slice(1).filter(function (r) { return !have[r[0]]; });
+    if (add.length) sh.getRange(sh.getLastRow() + 1, 1, add.length, 3).setValues(add);
   }
   return sh;
 }
@@ -149,14 +164,25 @@ function json(obj) {
 /* -------------------------------------------------------------- lead intake */
 
 function createLead(p) {
-  // Spam gates: honeypot filled, or submitted faster than a human can type.
-  if (p.company_website) return { ok: true, data: { lead_id: 'ignored' } };
-  if (Number(p.fill_seconds) && Number(p.fill_seconds) < 4) return { ok: true, data: { lead_id: 'ignored' } };
-
+  var cfg = config();
   var mobile = normaliseMobile(p.mobile);
   if (!p.name || !mobile) return { ok: false, error: 'name and mobile are required' };
 
-  var cfg = config();
+  var gate = spamCheck(p, mobile, cfg);
+  if (gate.block) {
+    logBlocked(p, gate.reason, mobile);
+    if (gate.silent) return { ok: true, data: { lead_id: 'ignored' } };
+    return { ok: false, error: gate.retry
+      ? 'Too many enquiries just now. Please try again in a few minutes, or WhatsApp us.'
+      : 'We could not accept this enquiry. Please WhatsApp us on +91 89565 52480.' };
+  }
+
+  // Same mobile inside the dedupe window: hand back the first reference, no second row.
+  var cache = CacheService.getScriptCache();
+  var dupeKey = 'aoa_m_' + mobile.replace(/\D/g, '');
+  var prior = cache.get(dupeKey);
+  if (prior) return { ok: true, data: { lead_id: prior, duplicate: true } };
+
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var sh = ensureSheet(ss, SHEET_LEADS, LEAD_COLUMNS);
 
@@ -227,6 +253,9 @@ function createLead(p) {
       sh.getRange(rowIndex, LEAD_COLUMNS.indexOf('wa_status') + 1).setValue(waStatus);
     }
 
+    cache.put(dupeKey, leadId, Math.max(60, num(cfg, 'spam_dupe_minutes', 20) * 60));
+    if (gate.bump) gate.bump();
+
     return { ok: true, data: { lead_id: leadId, band: scored.band } };
   } finally {
     lock.releaseLock();
@@ -245,6 +274,93 @@ function nextLeadId(sh, now) {
     }
   }
   return prefix + ('0' + (count + 1)).slice(-2);
+}
+
+/* ----------------------------------------------------------------- anti-spam */
+
+/**
+ * Layered gate: hidden fields, timing, content, and rate limits.
+ * Returns { block, silent, retry, reason, bump } — silent blocks look like a
+ * success to the sender (bots learn nothing); the rest come back as an error.
+ */
+function spamCheck(p, mobile, cfg) {
+  var name = String(p.name || '').trim();
+  var notes = String(p.notes || '');
+
+  // 1. Honeypots — no human ever fills these.
+  if (p.company_website || p.fax_number) return { block: true, silent: true, reason: 'honeypot' };
+
+  // 2. Timing — a real person cannot complete three steps in a few seconds.
+  var secs = Number(p.fill_seconds);
+  if (secs && secs < num(cfg, 'spam_min_seconds', 5)) {
+    return { block: true, silent: true, reason: 'submitted in ' + secs + 's' };
+  }
+
+  // 3. Name sanity.
+  if (name.length < 2 || name.length > 80) return { block: true, reason: 'name length' };
+  if (!/[A-Za-z\u0900-\u097F]/.test(name)) return { block: true, reason: 'name has no letters' };
+  if (/https?:\/\/|www\.|<[a-z]/i.test(name)) return { block: true, reason: 'markup or link in name' };
+
+  // 4. Message content.
+  if (notes.length > 1500) return { block: true, reason: 'message too long' };
+  var links = (notes.match(/https?:\/\/|www\./gi) || []).length;
+  if (links > num(cfg, 'spam_max_links', 1)) return { block: true, reason: links + ' links in message' };
+  if (/[\u0400-\u04FF\u4E00-\u9FFF]/.test(name + ' ' + notes)) return { block: true, reason: 'unexpected script' };
+
+  // 5. Word blocklist (Config sheet, editable).
+  var hay = (name + ' ' + notes + ' ' + (p.email || '') + ' ' + (p.location || '')).toLowerCase();
+  var words = String(cfg['spam_blocklist'] || '').split(',');
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i].trim().toLowerCase();
+    if (w && hay.indexOf(w) !== -1) return { block: true, reason: 'blocked word: ' + w };
+  }
+
+  // 6. Email, when given, has to look like one.
+  if (p.email && !/^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(String(p.email).trim())) {
+    return { block: true, reason: 'email looks invalid' };
+  }
+
+  // 7. Placeholder mobile numbers.
+  var d = String(mobile).replace(/\D/g, '').slice(-10);
+  if (/^(\d)\1{9}$/.test(d) || d === '9876543210' || d === '1234567890') {
+    return { block: true, reason: 'placeholder mobile' };
+  }
+
+  // 8. Rate limits — per browser and site-wide, one hour each.
+  var cache = CacheService.getScriptCache();
+  var cid = String(p.client_id || '').replace(/[^A-Za-z0-9]/g, '').slice(0, 40);
+  var ckey = cid ? 'aoa_c_' + cid : '';
+  var gkey = 'aoa_g_' + Math.floor(new Date().getTime() / 3600000);
+  var cCount = ckey ? Number(cache.get(ckey) || 0) : 0;
+  var gCount = Number(cache.get(gkey) || 0);
+  if (ckey && cCount >= num(cfg, 'spam_max_per_client_hour', 3)) {
+    return { block: true, reason: 'browser rate limit (' + cCount + '/hour)' };
+  }
+  if (gCount >= num(cfg, 'spam_max_per_hour', 40)) {
+    return { block: true, retry: true, reason: 'site rate limit (' + gCount + '/hour)' };
+  }
+
+  return {
+    block: false,
+    bump: function () {
+      if (ckey) cache.put(ckey, String(cCount + 1), 3600);
+      cache.put(gkey, String(gCount + 1), 3600);
+    }
+  };
+}
+
+/** Blocked attempts are logged, never lost — check this tab for false positives. */
+function logBlocked(p, reason, mobile) {
+  try {
+    var sh = ensureSheet(SpreadsheetApp.getActiveSpreadsheet(), SHEET_BLOCKED, BLOCKED_COLUMNS);
+    sh.appendRow([
+      new Date(), reason || '', String(p.name || '').slice(0, 120), "'" + (mobile || String(p.mobile || '')),
+      String(p.email || '').slice(0, 120), p.track || '', String(p.notes || '').slice(0, 500),
+      p.client_id || '', p.page || '', p.referrer || '', p.device || '', p.fill_seconds || ''
+    ]);
+  } catch (err) {
+    Logger.log('logBlocked failed: ' + err);
+  }
 }
 
 function normaliseMobile(raw) {

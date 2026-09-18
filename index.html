@@ -1414,6 +1414,7 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
       next: 'Next', back: 'Back', send: 'Send enquiry', sending: 'Sending…',
       err_name: 'Please add your name', err_mobile: 'Enter a 10-digit mobile number', err_consent: 'Please tick to continue',
       err_send: 'That did not send. Please WhatsApp or email us instead.',
+      err_wait: 'Please wait a moment before sending again.',
       done_h: 'Thank you', done_p: 'Your enquiry has reached us. We reply to most enquiries the same working day.',
       done_ref: 'Reference', again: 'Send another enquiry', select: 'Select'
     },
@@ -1439,6 +1440,7 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
       next: 'पुढे', back: 'मागे', send: 'चौकशी पाठवा', sending: 'पाठवत आहे…',
       err_name: 'कृपया नाव लिहा', err_mobile: '१० अंकी मोबाइल नंबर लिहा', err_consent: 'पुढे जाण्यासाठी टिक करा',
       err_send: 'पाठवता आले नाही. कृपया व्हॉट्सॲप किंवा ईमेल करा.',
+      err_wait: 'पुन्हा पाठवण्यापूर्वी थोडा वेळ थांबा.',
       done_h: 'धन्यवाद', done_p: 'तुमची चौकशी आम्हाला मिळाली. आम्ही सहसा त्याच कामकाजाच्या दिवशी उत्तर देतो.',
       done_ref: 'संदर्भ', again: 'आणखी एक चौकशी', select: 'निवडा'
     },
@@ -1464,6 +1466,7 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
       next: 'आगे', back: 'पीछे', send: 'पूछताछ भेजें', sending: 'भेजा जा रहा है…',
       err_name: 'कृपया नाम लिखें', err_mobile: '10 अंकों का मोबाइल नंबर लिखें', err_consent: 'आगे बढ़ने के लिए टिक करें',
       err_send: 'भेजा नहीं जा सका। कृपया व्हाट्सएप या ईमेल करें।',
+      err_wait: 'दोबारा भेजने से पहले थोड़ा रुकें।',
       done_h: 'धन्यवाद', done_p: 'आपकी पूछताछ हमें मिल गई है। हम आमतौर पर उसी कार्यदिवस पर उत्तर देते हैं।',
       done_ref: 'संदर्भ', again: 'एक और पूछताछ', select: 'चुनें'
     }
@@ -1548,6 +1551,7 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
           :
           '<h3>' + t('q_you') + '</h3>' + s3) +
       '<input type="text" name="company_website" class="lf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<input type="text" name="fax_number" class="lf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
       '<p class="lf-err" hidden></p>' +
       '<div class="lf-nav">' +
       (state.step > 1 ? '<button type="button" class="btn ghost lf-back">' + t('back') + '</button>' : '<span></span>') +
@@ -1559,6 +1563,9 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
       var el = root.querySelector('[name="' + k + '"]');
       if (el && el.type !== 'checkbox') el.value = state.data[k];
     });
+
+    var nmEl = root.querySelector('[name="name"]'); if (nmEl) nmEl.maxLength = 80;
+    var ntEl = root.querySelector('[name="notes"]'); if (ntEl) ntEl.maxLength = 1500;
     bind();
   }
 
@@ -1607,6 +1614,17 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
     try { if (typeof gtag === 'function') gtag('event', name, params || {}); } catch (e) { }
   }
 
+  function clientId() {
+    try {
+      var k = 'aoa_cid', v = localStorage.getItem(k);
+      if (!v) {
+        v = (Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+        localStorage.setItem(k, v);
+      }
+      return v;
+    } catch (e) { return ''; }
+  }
+
   function payload() {
     var d = state.data || {};
     var q = new URLSearchParams(location.search);
@@ -1615,7 +1633,8 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
       whatsapp_ok: !!d.whatsapp_ok, email: (d.email || '').trim(), role: d.role || '', location: d.location || '',
       area_value: d.area_value || '', area_unit: d.area_unit || '', need: d.need || '', timeline: d.timeline || '',
       budget_band: d.budget_band || '', org_type: d.org_type || '', sites: d.sites || '', users: d.users || '',
-      stage: d.stage || '', notes: d.notes || '', consent: !!d.consent, company_website: d.company_website || '',
+      stage: d.stage || '', notes: (d.notes || '').slice(0, 1500), consent: !!d.consent,
+      company_website: d.company_website || '', fax_number: d.fax_number || '', client_id: clientId(),
       page: location.pathname + location.search, referrer: document.referrer || '',
       utm_source: q.get('utm_source') || '', utm_medium: q.get('utm_medium') || '', utm_campaign: q.get('utm_campaign') || '',
       utm_term: q.get('utm_term') || '', utm_content: q.get('utm_content') || '', gclid: q.get('gclid') || '',
@@ -1632,6 +1651,7 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
   }
 
   function done(ref, p) {
+    try { localStorage.setItem('aoa_lead_sent', String(Date.now())); } catch (e) { }
     ev('generate_lead', { method: 'form', track: p.track, language: lang, value: 1 });
     root.innerHTML = '<div class="lf-done"><div class="lf-check" aria-hidden="true">✓</div><h3>' + t('done_h') + '</h3><p>' + t('done_p') + '</p>' +
       (ref ? '<p class="lf-ref">' + t('done_ref') + ': <b>' + ref + '</b></p>' : '') +
@@ -1646,6 +1666,11 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
     if (!p.name) return err(t('err_name'));
     if (!/^[6-9]\d{9}$/.test(p.mobile.replace(/\D/g, '').replace(/^91/, ''))) return err(t('err_mobile'));
     if (!p.consent) return err(t('err_consent'));
+    if (p.fill_seconds < 4) return err(t('err_wait'));
+    try {
+      var last = Number(localStorage.getItem('aoa_lead_sent') || 0);
+      if (last && Date.now() - last < 60000) return err(t('err_wait'));
+    } catch (e) { }
     err('');
     var btn = $('.lf-send'); if (btn) { btn.disabled = true; btn.textContent = t('sending'); }
 
