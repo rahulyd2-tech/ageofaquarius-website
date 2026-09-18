@@ -211,7 +211,12 @@ function createLead(p) {
       wa_status: ''
     };
 
-    var values = LEAD_COLUMNS.map(function (c) { return row[c] === undefined ? '' : row[c]; });
+    var values = LEAD_COLUMNS.map(function (c) {
+      var v = row[c] === undefined ? '' : row[c];
+      // Keep '+91 ...' and anything formula-like as plain text in the sheet.
+      if (typeof v === 'string' && /^[=+\-@]/.test(v)) v = "'" + v;
+      return v;
+    });
     sh.appendRow(values);
     var rowIndex = sh.getLastRow();
 
