@@ -30,7 +30,7 @@ var LEAD_COLUMNS = [
 
 var ACTIVITY_COLUMNS = ['ts', 'lead_id', 'actor', 'type', 'summary', 'next_step'];
 
-var BLOCKED_COLUMNS = ['ts', 'reason', 'name', 'mobile', 'email', 'track', 'notes', 'client_id', 'page', 'referrer', 'device', 'fill_seconds'];
+var BLOCKED_COLUMNS = ['ts', 'reason', 'name', 'mobile', 'email', 'track', 'lang', 'notes', 'client_id', 'page', 'referrer', 'device', 'fill_seconds', 'raw'];
 
 var DEFAULT_CONFIG = [
   ['key', 'value', 'note'],
@@ -88,6 +88,10 @@ function ensureSheet(ss, name, columns) {
   var sh = ss.getSheetByName(name);
   if (!sh) sh = ss.insertSheet(name);
   if (sh.getLastRow() === 0) {
+    sh.getRange(1, 1, 1, columns.length).setValues([columns]);
+    SpreadsheetApp.flush();
+  } else if (sh.getLastColumn() < columns.length) {
+    // A later version of this script added columns — repair the header row.
     sh.getRange(1, 1, 1, columns.length).setValues([columns]);
   }
   sh.setFrozenRows(1);
@@ -222,6 +226,7 @@ function createLead(p) {
       score: scored.score,
       band: scored.band,
       status: 'New',
+      internal_notes: gate.warn || '',
       owner: cfg.owner || 'Rahul',
       next_action_at: new Date(now.getTime() + slaHours * 3600 * 1000),
       page: p.page || '',
@@ -287,11 +292,18 @@ function spamCheck(p, mobile, cfg) {
   var name = String(p.name || '').trim();
   var notes = String(p.notes || '');
 
-  // 1. Honeypots — no human ever fills these.
-  if (p.company_website || p.fax_number) return { block: true, silent: true, reason: 'honeypot' };
+  var secs = Number(p.fill_seconds);
+  var warn = '';
+
+  // 1. Honeypot — a hidden field no human can reach. Browser autofill does
+  // sometimes fill hidden fields anyway, so a trip only blocks when the form was
+  // also filled inhumanly fast; otherwise the lead is kept and flagged.
+  if (p.lf_ref2 || p.company_website || p.fax_number) {
+    if (!secs || secs < 20) return { block: true, silent: true, reason: 'honeypot' };
+    warn = 'Hidden field was filled (browser autofill?) — kept for review';
+  }
 
   // 2. Timing — a real person cannot complete three steps in a few seconds.
-  var secs = Number(p.fill_seconds);
   if (secs && secs < num(cfg, 'spam_min_seconds', 5)) {
     return { block: true, silent: true, reason: 'submitted in ' + secs + 's' };
   }
@@ -342,6 +354,7 @@ function spamCheck(p, mobile, cfg) {
 
   return {
     block: false,
+    warn: warn,
     bump: function () {
       if (ckey) cache.put(ckey, String(cCount + 1), 3600);
       cache.put(gkey, String(gCount + 1), 3600);
@@ -355,8 +368,9 @@ function logBlocked(p, reason, mobile) {
     var sh = ensureSheet(SpreadsheetApp.getActiveSpreadsheet(), SHEET_BLOCKED, BLOCKED_COLUMNS);
     sh.appendRow([
       new Date(), reason || '', String(p.name || '').slice(0, 120), "'" + (mobile || String(p.mobile || '')),
-      String(p.email || '').slice(0, 120), p.track || '', String(p.notes || '').slice(0, 500),
-      p.client_id || '', p.page || '', p.referrer || '', p.device || '', p.fill_seconds || ''
+      String(p.email || '').slice(0, 120), p.track || '', p.lang || '', String(p.notes || '').slice(0, 500),
+      p.client_id || '', p.page || '', p.referrer || '', p.device || '', p.fill_seconds || '',
+      JSON.stringify(p).slice(0, 5000)
     ]);
   } catch (err) {
     Logger.log('logBlocked failed: ' + err);

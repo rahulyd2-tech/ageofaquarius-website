@@ -1558,8 +1558,7 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
           BUDGETS.map(function (b) { return '<option value="' + b[0] + '">' + (b[0] ? b[1] : t('b_none')) + '</option>'; }).join('') + '</select></label></div>'
           :
           '<h3>' + t('q_you') + '</h3>' + s3) +
-      '<input type="text" name="company_website" class="lf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-      '<input type="text" name="fax_number" class="lf-hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<input type="text" name="lf_ref2" class="lf-hp" tabindex="-1" autocomplete="off" aria-hidden="true" readonly>' +
       '<p class="lf-err" hidden></p>' +
       '<div class="lf-nav">' +
       (state.step > 1 ? '<button type="button" class="btn ghost lf-back">' + t('back') + '</button>' : '<span></span>') +
@@ -1642,7 +1641,7 @@ window.LEAD_TOKEN = 'f74d43a3101c4501bcf41e71d83867f4';
       area_value: d.area_value || '', area_unit: d.area_unit || '', need: d.need || '', timeline: d.timeline || '',
       budget_band: d.budget_band || '', org_type: d.org_type || '', sites: d.sites || '', users: d.users || '',
       stage: d.stage || '', notes: (d.notes || '').slice(0, 1500), consent: !!d.consent,
-      company_website: d.company_website || '', fax_number: d.fax_number || '', client_id: clientId(),
+      lf_ref2: d.lf_ref2 || '', client_id: clientId(),
       page: location.pathname + location.search, referrer: document.referrer || '',
       utm_source: q.get('utm_source') || '', utm_medium: q.get('utm_medium') || '', utm_campaign: q.get('utm_campaign') || '',
       utm_term: q.get('utm_term') || '', utm_content: q.get('utm_content') || '', gclid: q.get('gclid') || '',
